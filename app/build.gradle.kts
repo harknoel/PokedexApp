@@ -78,6 +78,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation("androidx.paging:paging-compose:3.3.6")
     implementation("androidx.paging:paging-runtime:3.3.6")
+    implementation(libs.ui)
+    implementation(libs.androidx.foundation)
     kapt("com.google.dagger:hilt-android-compiler:2.52")
 
     // Tests
