@@ -10,8 +10,7 @@ import com.hark.pokedex.domain.model.PokemonType
 import javax.inject.Inject
 
 class PokemonMapper @Inject constructor() {
-
-    fun mapToDomain(
+    fun toDomain(
         dto: PokemonDto,
         speciesDto: PokemonSpeciesDto
     ): Pokemon {
@@ -26,11 +25,12 @@ class PokemonMapper @Inject constructor() {
             types = dto.types.map { mapToPokemonType(it.type.name) },
             stats = dto.stats.map { mapToPokemonStat(it.stat.name, it.baseStat) },
             abilities = dto.abilities.map { Ability(it.ability.name, it.ability.url) },
-
             baseHappiness = speciesDto.baseHappiness,
             captureRate = speciesDto.captureRate,
             habitat = speciesDto.habitat?.name,
-            flavorText = speciesDto.flavorTextEntries.firstOrNull()?.flavorText
+            flavorText = speciesDto.flavorTextEntries
+                .firstOrNull { it.language.name == "en" }?.flavorText
+                ?: speciesDto.flavorTextEntries.firstOrNull()?.flavorText
         )
     }
 
@@ -54,10 +54,9 @@ class PokemonMapper @Inject constructor() {
             "dragon" -> PokemonType.Dragon
             "steel" -> PokemonType.Steel
             "fairy" -> PokemonType.Fairy
-            else -> PokemonType.Normal
+            else -> PokemonType.Unknown
         }
     }
-
 
     private fun mapToPokemonStat(statName: String, baseStat: Int): PokemonStat {
         return when (statName.lowercase()) {

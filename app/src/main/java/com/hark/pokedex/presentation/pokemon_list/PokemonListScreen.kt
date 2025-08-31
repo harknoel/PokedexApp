@@ -11,7 +11,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 
 @Composable
 fun PokemonListScreen(
-    viewModel: PokemonViewModel = hiltViewModel()
+    viewModel: PokemonListViewModel = hiltViewModel()
 ) {
     val lazyPagingItems = viewModel.pokemonList.collectAsLazyPagingItems()
 

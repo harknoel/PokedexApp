@@ -6,5 +6,6 @@ import com.hark.pokedex.domain.model.Pokemon
 import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepository {
-    fun getPokemonList(): Flow<PagingData<ResultDto>>
+    fun getPokemonList(): Flow<PagingData<Pokemon>>
+    suspend fun getPokemonDetail(pokemonId: Int): Pokemon
 }

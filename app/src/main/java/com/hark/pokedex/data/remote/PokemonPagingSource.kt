@@ -3,36 +3,49 @@ package com.hark.pokedex.data.remote
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.hark.pokedex.data.mappers.PokemonMapper
-import com.hark.pokedex.data.remote.dto.pokemon_list.ResultDto
-import javax.inject.Inject
+import com.hark.pokedex.domain.model.Pokemon
 
-class PokemonPagingSource @Inject constructor(
+class PokemonPagingSource(
     private val api: PokeApiService,
     private val mapper: PokemonMapper
-) : PagingSource<Int, ResultDto>() {
+) : PagingSource<Int, Pokemon>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ResultDto> {
+    override fun getRefreshKey(state: PagingState<Int, Pokemon>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
+    }
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
         return try {
             val page = params.key ?: 0
-            val limit = params.loadSize
-            val offset = page * limit
+            val offset = page * params.loadSize
 
-            val response = api.getPokemonList(offset, limit)
+            val response = api.getPokemonList(offset = offset, limit = params.loadSize)
+
+            val pokemonList = response.results.mapNotNull { result ->
+                try {
+                    val pokemonId = extractPokemonId(result.url)
+                    val pokemonDto = api.getPokemonDetail(pokemonId)
+                    val speciesDto = api.getPokemonSpecies(pokemonId)
+                    mapper.toDomain(pokemonDto, speciesDto)
+                } catch (e: Exception) {
+                    null
+                }
+            }
 
             LoadResult.Page(
-                data = response.results,
+                data = pokemonList,
                 prevKey = if (page == 0) null else page - 1,
-                nextKey = if (response.results.isEmpty()) null else page + 1
+                nextKey = if (response.next.isNullOrEmpty()) null else page + 1
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, ResultDto>): Int? {
-        return state.anchorPosition?.let { anchor ->
-            state.closestPageToPosition(anchor)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchor)?.nextKey?.minus(1)
-        }
+    private fun extractPokemonId(url: String): Int {
+        return url.trimEnd('/').split("/").last().toInt()
     }
 }
