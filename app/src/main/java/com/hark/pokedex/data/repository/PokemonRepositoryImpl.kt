@@ -3,6 +3,7 @@ package com.hark.pokedex.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.hark.pokedex.domain.repository.PokemonCacheRepository
 import com.hark.pokedex.data.mappers.PokemonMapper
 import com.hark.pokedex.data.remote.ApiOperation
 import com.hark.pokedex.data.remote.PokeApiService
@@ -14,7 +15,8 @@ import javax.inject.Inject
 
 class PokemonRepositoryImpl @Inject constructor(
     private val api: PokeApiService,
-    private val mapper: PokemonMapper
+    private val mapper: PokemonMapper,
+    private val cache: PokemonCacheRepository
 ) : PokemonRepository {
 
     override fun getPokemonList(): Flow<PagingData<Pokemon>> {
@@ -24,15 +26,23 @@ class PokemonRepositoryImpl @Inject constructor(
                 enablePlaceholders = false,
                 prefetchDistance = 3
             ),
-            pagingSourceFactory = { PokemonPagingSource(api, mapper) }
+            pagingSourceFactory = { PokemonPagingSource(api, mapper, cache) }
         ).flow
     }
 
     override suspend fun getPokemonDetail(pokemonId: Int): ApiOperation<Pokemon> {
         return safeApiCall {
+            val cachedPokemon = cache.getPokemon(pokemonId)
+            if (cachedPokemon != null) {
+                return@safeApiCall cachedPokemon
+            }
+
             val pokemonDto = api.getPokemonDetail(pokemonId)
             val speciesDto = api.getPokemonSpecies(pokemonId)
-            mapper.toDomain(pokemonDto, speciesDto)
+            val pokemon = mapper.toDomain(pokemonDto, speciesDto)
+
+            cache.savePokemon(pokemon)
+            pokemon
         }
     }
 
@@ -44,4 +54,3 @@ class PokemonRepositoryImpl @Inject constructor(
         }
     }
 }
-
