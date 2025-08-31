@@ -3,7 +3,7 @@ package com.hark.pokedex.data.remote.dto.pokemon_species
 import com.google.gson.annotations.SerializedName
 
 data class PokemonSpeciesDto(
-    val color: Color,
+    val color: ColorDto,
     val generation: Generation,
     val habitat: Habitat,
     val id: Int,

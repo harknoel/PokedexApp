@@ -13,7 +13,11 @@ fun PokedexNavGraph(navController: NavHostController) {
         startDestination = "pokemon_list"
     ) {
         composable("pokemon_list") {
-            PokemonListScreen()
+            PokemonListScreen(
+                onPokemonClick = { pokemonId ->
+                    navController.navigate(Route.PokemonDetailsScreen.createRoute(pokemonId))
+                },
+            )
         }
     }
 }
