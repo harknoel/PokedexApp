@@ -8,7 +8,6 @@ import com.hark.pokedex.domain.model.Pokemon
 import com.hark.pokedex.domain.model.PokemonStat
 import com.hark.pokedex.domain.model.PokemonType
 import javax.inject.Inject
-
 class PokemonMapper @Inject constructor() {
     fun toDomain(
         dto: PokemonDto,
@@ -21,13 +20,13 @@ class PokemonMapper @Inject constructor() {
             weight = dto.weight,
             order = dto.order,
             baseExperience = dto.baseExperience,
-            imageUrl = dto.sprites.other?.officialArtwork?.frontDefault ?: "",
+            imageUrl = dto.sprites.other.officialArtwork.frontDefault,
             types = dto.types.map { mapToPokemonType(it.type.name) },
             stats = dto.stats.map { mapToPokemonStat(it.stat.name, it.baseStat) },
             abilities = dto.abilities.map { Ability(it.ability.name, it.ability.url) },
             baseHappiness = speciesDto.baseHappiness,
             captureRate = speciesDto.captureRate,
-            habitat = speciesDto.habitat?.name,
+            habitat = speciesDto.habitat.name,
             flavorText = speciesDto.flavorTextEntries
                 .firstOrNull { it.language.name == "en" }?.flavorText
                 ?: speciesDto.flavorTextEntries.firstOrNull()?.flavorText

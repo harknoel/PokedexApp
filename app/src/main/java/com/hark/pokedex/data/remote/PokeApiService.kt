@@ -20,3 +20,8 @@ interface PokeApiService {
     @GET("pokemon-species/{id}")
     suspend fun getPokemonSpecies(@Path("id") pokemonId: Int): PokemonSpeciesDto
 }
+
+sealed class ApiOperation<out T> {
+    data class Success<out T>(val data: T) : ApiOperation<T>()
+    data class Failure(val exception: Exception) : ApiOperation<Nothing>()
+}

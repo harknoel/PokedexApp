@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
-    getPokemonListUseCase: GetPokemonListUseCase
+    private val getPokemonListUseCase: GetPokemonListUseCase
 ) : ViewModel() {
 
     val pokemonList: Flow<PagingData<Pokemon>> = getPokemonListUseCase()

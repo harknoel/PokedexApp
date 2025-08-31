@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.hark.pokedex.data.mappers.PokemonMapper
+import com.hark.pokedex.data.remote.ApiOperation
 import com.hark.pokedex.data.remote.PokeApiService
 import com.hark.pokedex.data.remote.PokemonPagingSource
 import com.hark.pokedex.domain.model.Pokemon
@@ -27,10 +28,20 @@ class PokemonRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPokemonDetail(pokemonId: Int): Pokemon {
-        val pokemonDto = api.getPokemonDetail(pokemonId)
-        val speciesDto = api.getPokemonSpecies(pokemonId)
-        return mapper.toDomain(pokemonDto, speciesDto)
+    override suspend fun getPokemonDetail(pokemonId: Int): ApiOperation<Pokemon> {
+        return safeApiCall {
+            val pokemonDto = api.getPokemonDetail(pokemonId)
+            val speciesDto = api.getPokemonSpecies(pokemonId)
+            mapper.toDomain(pokemonDto, speciesDto)
+        }
+    }
+
+    private inline fun <T> safeApiCall(apiCall: () -> T): ApiOperation<T> {
+        return try {
+            ApiOperation.Success(data = apiCall())
+        } catch (e: Exception) {
+            ApiOperation.Failure(exception = e)
+        }
     }
 }
 
