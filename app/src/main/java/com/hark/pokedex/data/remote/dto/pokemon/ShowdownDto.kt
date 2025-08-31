@@ -2,7 +2,7 @@ package com.hark.pokedex.data.remote.dto.pokemon
 
 import com.google.gson.annotations.SerializedName
 
-data class Showdown(
+data class ShowdownDto(
 
     @SerializedName("back_default")
     val backDefault: String,

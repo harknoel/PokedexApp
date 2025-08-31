@@ -1,4 +1,4 @@
-package com.hark.pokedex.data.remote.dto.pokemon
+package com.hark.pokedex.domain.model
 
 data class Ability(
     val name: String,

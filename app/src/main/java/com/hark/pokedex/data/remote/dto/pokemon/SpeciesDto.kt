@@ -1,6 +1,6 @@
 package com.hark.pokedex.data.remote.dto.pokemon
 
-data class Type(
+data class SpeciesDto(
     val name: String,
     val url: String
 )

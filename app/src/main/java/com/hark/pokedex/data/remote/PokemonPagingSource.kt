@@ -2,11 +2,13 @@ package com.hark.pokedex.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.hark.pokedex.data.mappers.PokemonMapper
 import com.hark.pokedex.data.remote.dto.pokemon_list.ResultDto
 import javax.inject.Inject
 
 class PokemonPagingSource @Inject constructor(
-    private val api: PokeApiService
+    private val api: PokeApiService,
+    private val mapper: PokemonMapper
 ) : PagingSource<Int, ResultDto>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ResultDto> {

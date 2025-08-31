@@ -1,6 +1,6 @@
 package com.hark.pokedex.data.remote.dto.pokemon
 
-data class Types(
+data class TypesDto(
     val slot: Int,
-    val type: Type
+    val type: TypeDto
 )

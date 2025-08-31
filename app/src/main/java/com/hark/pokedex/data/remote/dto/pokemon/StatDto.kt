@@ -1,6 +1,6 @@
 package com.hark.pokedex.data.remote.dto.pokemon
 
-data class Stat(
+data class StatDto(
     val name: String,
     val url: String
 )
