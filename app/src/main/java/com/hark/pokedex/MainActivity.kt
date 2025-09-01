@@ -14,9 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.hark.pokedex.presentation.navigation.PokedexNavGraph
-import com.hark.pokedex.ui.theme.PokedexAppTheme
 import com.hark.pokedex.ui.theme.PokedexTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.getValue
@@ -27,12 +27,15 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         installSplashScreen().setKeepOnScreenCondition {
             viewModel.splashCondition.value
         }
         enableEdgeToEdge()
         setContent {
-            PokedexAppTheme {
+            PokedexTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(modifier = Modifier.padding(innerPadding)) {
                         val navController = rememberNavController()
