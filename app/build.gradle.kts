@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-    id("com.google.dagger.hilt.android")
-    kotlin("kapt")
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("dagger.hilt.android.plugin")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -42,54 +42,70 @@ android {
 }
 
 dependencies {
-    // AndroidX
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-
-    // Jetpack Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-
-    // ViewModel Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
-
-    // Navigation Compose
-    implementation("androidx.navigation:navigation-compose:2.8.3")
-
-    // Retrofit + Gson + OkHttp Logging
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-
-    // Coil for image loading
-    implementation("io.coil-kt:coil-compose:2.7.0")
-
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.52")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-    implementation(libs.androidx.appcompat)
-    implementation("androidx.paging:paging-compose:3.3.6")
-    implementation("androidx.paging:paging-runtime:3.3.6")
-    implementation(libs.ui)
+    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.material3)
     implementation(libs.androidx.foundation)
-    kapt("com.google.dagger:hilt-android-compiler:2.52")
-
-    // Tests
+    implementation(libs.ui.graphics)
     testImplementation(libs.junit)
+    testImplementation("org.mockito:mockito-core:5.19.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-
-    // Debugging
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Compose BOM
+    implementation(platform("androidx.compose:compose-bom:2025.01.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+
+    // ViewModel Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
+
+    // Navigation Compose
+    implementation("androidx.navigation:navigation-compose:2.9.3")
+
+    // Networking
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:5.1.0")
+
+    // Image Loading
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
+    // Dependency Injection - Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.57")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    kapt("com.google.dagger:hilt-android-compiler:2.57")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    //Splash Api
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    //Accompanist
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.4-beta")
+
+    //Datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    testImplementation(kotlin("test"))
+
+    // Paging
+    implementation("androidx.paging:paging-compose:3.3.6")
+    implementation("androidx.paging:paging-runtime:3.3.6")
 }
